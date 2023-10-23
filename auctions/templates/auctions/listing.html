@@ -1,0 +1,74 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Listing
+{% endblock %}
+
+{% block body %}
+
+<h2>Listing : {{item.item}} </h2>
+<h5>{{hello}}</h5>
+<div class="image"><img src="{{ item.image_url }}" style="height: 180px;"> </div>
+<div class="info">
+    <p>Description : {{item.description }} </p>
+    <p style="font-size: 30px ;">Price : {{ current_bid }} </p>
+    <p>Auctioned by : {{ item.user }} </p>
+
+</div>
+
+{% if user.is_authenticated %}
+    {% if item_in_watchlist %}
+    <div class="watchlist">
+        <div> <a href="{% url 'add_watchlist' item_id=item.id %}"> <button>Remove</button></a></div>
+        {% else %}
+        <div> <a href="{% url 'add_watchlist' item_id=item.id %}"> <button>Watchlist</button></a></div>
+    </div>
+    {% endif %}
+
+    {% if not item.sold %}
+    <div class="bidform">
+        <form action="{% url 'bid' %}?item_id={{ item.id }}" method="post">
+            {% csrf_token %}
+            <input type="number" step="0.01" required name="bid_amount" placeholder="Bid Amount">
+            <button type="submit" class="btn">Bid</button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if not item.sold %}
+    {% if user == item.user %}
+    <div class="winner">
+        <a href="{% url 'close_auction' %}?item_id={{ item.id }}&lar={{ current_bid }}">
+            <button>Close Auction</button>
+        </a>
+    </div>
+    {% endif %}
+    {% else %}
+    {% if winner %}
+    <div class="winner">You won the Auction</div>
+    {% endif %}
+        <div class="result"><p>Auction closed </p></div>
+    {% endif %}
+
+    <!-- comments  -->
+    <div class="comment">
+        <div class="comment-form">
+            <form action="{% url 'comment' %}?item_id={{ item.id }}" method="post">
+            {% csrf_token %}
+            <input type="text" step="0.01" required name="comment" placeholder="Comment">
+            <button type="submit" class="btn">Comment</button>
+        </form>
+        </div>
+        <div class="comment-section">
+            <h4>Comments: </h4>
+            <ul style="text-decoration: none;">
+                {% for comment in comments %}
+                <div class="c"><li style="text-decoration: none;"> {{comment.user}} : {{comment.comment}}</li>
+                </div>                
+                {% endfor %}
+            </ul>
+        </div>
+        
+    </div>{% endif %}
+
+{% endblock %}
