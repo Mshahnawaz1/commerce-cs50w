@@ -157,11 +157,18 @@ def close_auction(request):
     item = Listing.objects.get(id=item_id)
     current_bid = request.GET.get("lar")
 
+    
+
     if request.user == item.user:
         # add winner info to winner
-        winner = Bid.objects.get(bid_amount=current_bid, item=item)
-        winner = Winner.objects.create(user=winner.user, item=winner.item, last_bid=winner.bid_amount)
-        winner.save()
+        try:
+            winner = Bid.objects.get(bid_amount=current_bid, item=item)
+            winner = Winner.objects.create(user=winner.user, item=winner.item, last_bid=winner.bid_amount)
+            winner.save()
+        except:
+            winner = Winner.objects.create(user=item.user, item=item, last_bid=item.starting_bid)
+
+
         winner=True
         item.sold = True
         item.save()
@@ -187,7 +194,48 @@ def comment(request):
     url = reverse('listing', args=[request.GET.get("item_id")])
     return HttpResponseRedirect(url,context_data)
     
-    
+def categories(request):
+    items = Listing.objects.all()
+    categories = []
+    for item in items:
+        if item.category.capitalize() not in categories:
+            categories.append(item.category.capitalize())
+    print(categories)
+
+    return render(request, "auctions/category.html",{
+        "categories" : categories,
+    })
+
+def category_items(request):
+    category = request.GET.get("category").lower()
+    print(category)
+    items = Listing.objects.filter(category=category)
+    print(items)
+    return render(request, "auctions/category.html",{
+        "items" : items
+    })
+
+
+def sold_items(request):
+    items= Listing.objects.all()
+    return render(request , "auctions/sold-items.html",{
+        "items" : items
+    })
     
 # python manage.py runserver
 # python manage.py runserver --verbosity 3 
+
+    # categories = Listing.Category
+
+
+    # sample ={}
+
+    # for category, category_u in categories:
+    #     for item in items:
+    #         print(category, item.category)
+    #         if (category == item.category) and (item.sold == False):
+    #             if category in sample:
+    #                 sample[category].append(item.id)
+    #             else:
+    #                 sample[category] = item.id
+    # print(sample)

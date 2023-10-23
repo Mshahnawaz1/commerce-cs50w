@@ -6,14 +6,15 @@ class User(AbstractUser):
     
     def __str__(self):
         return f"{self.username}"
-
-
+   
 class Listing(models.Model):
+    # list of categories which are key and value pair
     Category = [
     ('electronics', 'Electronics'),
     ('clothing', 'Clothing'),
     ('books', 'Books'),
-    ('other', 'Others'),
+    ('gadgets', 'Gadgets'),
+    ('others', 'Others'),
 
     # ... add more categories as needed
 ]
@@ -23,7 +24,7 @@ class Listing(models.Model):
     item = models.CharField(max_length=64)
     description = models.TextField()
     image_url    = models.URLField(blank=True,max_length= 1000, default='https://i.ibb.co/4pG5hBD/noimage.png')
-    category = models.CharField(max_length=64, default="other", choices=Category)
+    category = models.CharField(max_length=64, default="others", choices=Category)
     starting_bid = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now=True)
     sold = models.BooleanField(default=False)
