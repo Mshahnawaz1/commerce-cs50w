@@ -17,7 +17,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # added this to define primary key for all the models
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# specify template pack for css for forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -34,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'auctions',
     'django.contrib.admin',
     'django.contrib.auth',

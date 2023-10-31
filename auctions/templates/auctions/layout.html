@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <header>
     <h1>Auctions</h1>
     <div>
         {% if user.is_authenticated %}
@@ -51,6 +52,7 @@
         </li>
         {% endif %}
     </ul>
+</header>
     <hr>
     {% block body %}
     {% endblock %}

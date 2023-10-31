@@ -2,13 +2,12 @@
 
 {% block body %}
 <h2>Active Listings</h2>
-<ul>
+<ul class="list-group">
     {% for item in items %}
     {% if item.sold == False %}
-        <div class="item">
-
-            <div class="image-section" style="width: 30%; height: 200px;">
-                <img src="{{ item.image_url }}" style="height: 180px">
+    <li class="item-details">
+            <div class="image-section">
+                <img src="{{ item.image_url }}" alt="item-image">
             </div>
 
             <div class="info-section">
@@ -16,8 +15,9 @@
                 <p><strong>Price: </strong>{{ item.starting_bid }}</p>
                 <p>Description : {{ item.description}} </p>
                 <p>Created on {{ item.created_at}} </p>
+                <p>By {{ item.user }} </p>
             </div>
-        </div>
+    </li>
     </a>
     {% endif %}
     {% endfor %}

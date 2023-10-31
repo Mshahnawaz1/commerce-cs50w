@@ -2,23 +2,23 @@
 
 {% block body %}
 <h2>Watchlist</h2>
-<ul>
-
+<div class="list-group">
     {% for row in items %}
-        <div class="item">
-            <div class="image-section" style="width: 30%; height: 200px;">
-                <img src="{{ row.item.image_url }}" style="height: 180px">
-            </div>
-            <div class="info-section">
-                <a href="{% url 'listing' item_id=row.item.id %}"><h5>{{ row.item}} </h5></a>
-                <p><strong>Price: </strong>{{ row.item.starting_bid }}</p>
-                <p>Description : {{ row.item.description }} </p>
-                <p>Created on {{ row.item.created_at }} </p> 
-            </div>
+    <div class="item-details">
+        <div class="image-section" style="width: 30%; height: 200px;">
+            <img src="{{ row.item.image_url }}" style="height: 180px">
         </div>
-    </a>
+        <div class="info-section">
+            <a href="{% url 'listing' item_id=row.item.id %}">
+                <h5>{{ row.item}} </h5>
+            </a>
+            <p><strong>Price: </strong>{{ row.item.starting_bid }}</p>
+            <p>Description : {{ row.item.description }} </p>
+            <p>Created on {{ row.item.created_at }} </p>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 
 {% endblock %}
 <!-- row.item.description  ---  here row.item is instance of listing -->
