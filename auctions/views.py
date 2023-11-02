@@ -97,12 +97,20 @@ def listing(request, item_id):
 
     # get comments 
     comments = Comment.objects.filter(item=item_id)
+    # check if winner 
+    # try:
+    #     tmp = Winner.objects.get(item=item)
+    #     winner = tmp.user
+    # except tmp.DoesNotExist:
+    #     winner = False
+    #     # winner = ''
 
     return render(request, "auctions/listing.html",{
         "item" : item,
         "item_in_watchlist" : item_in_watchlist,
         "current_bid" : current_bid,
-        "comments" : comments
+        "comments" : comments,
+        # "winner" : 'h'
     })
 
 @login_required(login_url="/login")
@@ -156,9 +164,7 @@ def close_auction(request):
     item_id  = request.GET.get("item_id")
     item = Listing.objects.get(id=item_id)
     current_bid = request.GET.get("lar")
-
-    
-
+    winner = True
     if request.user == item.user:
         # add winner info to winner
         try:
@@ -167,9 +173,6 @@ def close_auction(request):
             winner.save()
         except:
             winner = Winner.objects.create(user=item.user, item=item, last_bid=item.starting_bid)
-
-
-        winner=True
         item.sold = True
         item.save()
 

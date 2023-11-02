@@ -10,11 +10,11 @@
 <div class="title">
     <h2>Create Listings</h2>
 </div>
-    <div class="form-control">
+    <div class="create">
         <form action="{% url 'create_listing' %}" method="post">
             {% csrf_token %}
             {{form}}
-            <button type="submit">Create listing</button>
+            <button type="submit" class="btn">Create listing</button>
         </form>
     </div>
 </div>

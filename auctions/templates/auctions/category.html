@@ -11,7 +11,9 @@
         <ul>
             {% for category in categories %}
             <li>
-                <a href="{% url 'category_items' %}?category={{ category }}"> {{category}}</a> 
+                <div class="cate">
+                    <a href="{% url 'category_items' %}?category={{ category }}"> {{category}}</a> 
+                </div>
                 <!-- here category_s store key that is in category and is used to interact -->
             </li>
             {% endfor %}
