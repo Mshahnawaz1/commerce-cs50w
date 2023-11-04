@@ -97,20 +97,17 @@ def listing(request, item_id):
 
     # get comments 
     comments = Comment.objects.filter(item=item_id)
-    # check if winner 
-    # try:
-    #     tmp = Winner.objects.get(item=item)
-    #     winner = tmp.user
-    # except tmp.DoesNotExist:
-    #     winner = False
-    #     # winner = ''
+    # check if winner
+    winner = Winner.objects.filter(item=item)
+    if winner is None:
+        winner = False
 
     return render(request, "auctions/listing.html",{
         "item" : item,
         "item_in_watchlist" : item_in_watchlist,
         "current_bid" : current_bid,
         "comments" : comments,
-        # "winner" : 'h'
+        "winner" : winner
     })
 
 @login_required(login_url="/login")

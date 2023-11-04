@@ -60,7 +60,7 @@ img{
 .bidform{
     margin-top: 20px;
     position: relative;
-    left: 5%;
+    /* left: 5%; */
 }
 
 .comment-text{
@@ -91,11 +91,12 @@ img{
     padding: 10px;
 }
 
-
-
-
-
-
+ /* @media (max-height:87px) {
+    .image {
+        width: 50%; /* Image will take up 50% of its parent element's width */
+         /* You can adjust the width and other styles for smaller screens */ */
+    /* }
+}   */
 
 .price{
     font-size: x-large;

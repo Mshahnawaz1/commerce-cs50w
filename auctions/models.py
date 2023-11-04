@@ -13,6 +13,9 @@ class Listing(models.Model):
     ('electronics', 'Electronics'),
     ('clothing', 'Clothing'),
     ('books', 'Books'),
+    ('furniture', 'Furniture'),
+    ('bathroom', 'Bathroom'),
+    ('utensils', 'Utensils'),
     ('gadgets', 'Gadgets'),
     ('others', 'Others'),
 
