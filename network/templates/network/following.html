@@ -1,0 +1,22 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+
+
+
+<div class="posts-section">
+    <h1>All Posts</h1>
+    {% for post in posts %}
+        <div class="posts">
+            <a href="{% url 'profile' username=post.user%}"><p>{{post.user}} </p> </a> 
+            <p>{{post.timestamp}} </p>
+            <p>Post: {{post.post}} </p>
+            <p>Likes: {{post.likes}} </p>
+        </div>
+        {% endfor %}
+</div>
+{% endif %}
+
+
+{% endblock %}

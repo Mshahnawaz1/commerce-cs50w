@@ -1,0 +1,44 @@
+{% extends "network/layout.html" %} 
+{% load static %}
+
+{% block body %}
+<div class="profile" id="username">{{profile_user}} </div>
+<div class="info">
+    <div id="followers">Followers: {{ profile_user.followers.count }} </div>
+    <div id="following">Followings: {{ profile_user.following.count }} </div>
+</div>
+
+{% if user.is_authenticated %}
+
+{% if user.username != profile_user.username %}
+
+<div class="follow-section">
+ 
+        {% if is_following %}
+        <button id="follow-btn" data-user="{{profile_user.username}}">Unfollow</button>        
+        {% else %}
+        <button id="follow-btn"  data-user="{{profile_user.username}}">Follow</button>
+
+    
+    {% endif %}
+</div>
+
+{% endif %}
+
+<div class="posts-section">
+    <h4>All Posts</h4>
+    {% for post in posts %}
+    <div class="posts">
+        <a href="{% url 'profile' username=post.user%}">
+            <p>{{post.user}} </p>
+        </a>
+        <p>{{post.timestamp}} </p>
+        <p>Post: {{post.post}} </p>
+        <p>Likes: {{post.likes}} </p>
+    </div>
+    {% endfor %}
+</div>
+<script src="{% static 'network/follow.js' %}"></script>
+
+{% endif %}
+{% endblock %}
