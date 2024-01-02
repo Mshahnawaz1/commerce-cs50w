@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("clicked...")
     const user = btn.dataset.user
     const action = btn.textContent.trim()
+    
     console.log(user + action)
 
     form = new FormData();

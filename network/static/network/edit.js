@@ -1,80 +1,89 @@
 
+document.addEventListener('DOMContentLoaded', function () {
 
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener('click', function (event) {
+        // here should check if div is clicked instead of btn
+        const btn = event.target;
+        console.log(btn.id)
+        if (btn.id == "edit-btn") {
+            const id = btn.dataset.id;
+            const action = btn.dataset.action;
+            const user = btn.dataset.user;
+            const parentElement = document.querySelector(`#post-${id}`)
 
-    const edits = document.querySelectorAll('.edit');
 
-    edits.forEach((edit, index) => {
-        edit.addEventListener('click', () => {
+            console.log(btn.dataset.id, btn.dataset.action, btn.dataset.user)
+            if (btn.dataset.action == "edit") {
+                // when btn clicked for edit
+                const postText = document.querySelector(`#post-text-${id}`);
 
-            let post = document.querySelectorAll('.post-text')[index]
-            document.querySelectorAll('.form-edit')[index].style.display = "block";
-            post.style.display = "none"
-            edit.style.display = "none";
+                // create a new textarea
+                const textArea = document.createElement('textarea')
+                textArea.id = `text-area-${id}`
+                textArea.value = postText.textContent.replace("Post: ", "");
+                textArea.rows = 3;
+                textArea.cols = 60;
 
-            // gets id of post
-            const id = edit.dataset.id
-            const user = edit.dataset.user
-            const post_text = post.textContent.replace("Post: ", "")
-            console.log(id, user)
+                parentElement.replaceChild(textArea, postText)
 
-            form = new FormData()
-            form.append("user", user)
-            form.append("post", post_text)
-            form.append("id", id)
+                btn.dataset.action = "submit";
+                btn.innerHTML = "Submit";
 
-            // here id could be sent via get or post 
-            fetch("edit/",{
-                method: "POST",
-                body : form
-            })
+            }
+            else if (btn.dataset.action == "submit") {
+                const post = document.querySelector(`#text-area-${id}`).value
+                console.log(post)
 
-            .then(res => {
-                if(!res.ok){
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then(res => {
-                console.log(res)
-            })
-            
+                form = new FormData()
+                form.append("id", id)
+                form.append("post", post)
 
-            
-        });
-    });
+                fetch("edit/", {
+                    method: "POST",
+                    body: form,
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    }
+                })
 
+                    .then(response => {
+                        if (!response.ok) {
+                            console.log()
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(res => {
+                        console.log(res.post)
+                        const textArea = document.querySelector(`text-area-${id}`)
+
+                        const postElement = document.createElement('p')
+                        postElement.id = `post-text-${id}`
+                        postElement.textContent = res.post
+
+                        parentElement.replaceChild(postElement, textArea)
+                        btn.dataset.action = "submit";
+                        btn.innerHTML = "Submit";
+                    })
+            }
+
+        }
+    })
 })
 
-
-
-
-
-
-
-
-// document.addEventListener("DOMContentLoaded", function () {
-
-//     // document.addEventListener('click', event => {
-
-//     //     const element=event.target;
-//     //     if (element.className= "edit")
-//     //     {
-//     //         document.querySelector('.', '.form-edit').style.display = "block";
-//     //         element.style.display = "none";
-//     //         post = document.querySelector('.post-text');
-//     //     }
-//     // })
-//     let edits = document.querySelectorAll('.edit')
-//     edits.forEach((edit, index) => {
-//         edit.addEventListener('click',() => {
-
-//             document.querySelector('form-edit').style.display = "block"
-//             edit.style.display = 'none';
-//             document.querySelectorAll('post-text').style.display = "none";
-//             console.log("editing.......")
-//         })
-// })
-
-// })
-
+// Copied from django documentation
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

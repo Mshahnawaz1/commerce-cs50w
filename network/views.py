@@ -14,17 +14,16 @@ from .models import *
 def index(request):
     if request.method == 'POST':
         new_data = request.POST.get("post")
-        print(request.user)
 
         # add new post to db
         new_post = Posts.objects.create(post=new_data, user=request.user)
         new_post.save()
         return HttpResponseRedirect(reverse("index"))
+
     else:
         all_post = Posts.objects.order_by('-timestamp')
         p = Paginator(all_post, 10)
-        print(p.page(1).object_list)
-        print(p.num_pages)
+
 
         return render(request, "network/index.html", {
             "posts": p.page(1).object_list,
@@ -183,12 +182,20 @@ def like(request, page):
 
 def edit(request):
     if request.method == "POST":
-        user = request.GET.get("user")
-        post = request.GET.get("post")
-        id = request.GET.get("id")
-        console.log(user, post, id)
+        postText = request.POST.get("post")
+        id = request.POST.get("id")
+
         try:
-            post = Post.objects.get(pk=id)
+            # checks if request is from owner of page
+            post = Posts.objects.get(pk=id, user=request.user)
+            post.post = postText
+            post.save()
         except:
-            return JsonResponse({"error": "there was error"}, status=403)
-    return JsonResponse({"message": "hell"}, status=201)
+            return JsonResponse({"error": "user post not found"}, status=403)
+
+    response_data = {
+        "post" : postText,
+        "id" : id,
+
+    }
+    return JsonResponse({"message": "hell", "post" : postText}, status=201)
