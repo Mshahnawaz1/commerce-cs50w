@@ -5,12 +5,12 @@
 {% if user.is_authenticated %}
 <span class="material-icons-outlined">
     search
-    </span>
+</span>
 <div class="new-post">
     <h4>Add a new post</h4>
     <form action="{% url 'index' %}" method="post">
         {% csrf_token %}
-        <textarea class ="form-control" required id="text" name="post" ></textarea>
+        <textarea class="form-control" required id="text" name="post"></textarea>
         <!-- <input type="submit" class="btn btn-primary"> -->
         <button type="submit" class="btn btn-primary">Post</button>
     </form>
@@ -20,32 +20,35 @@
 <div class="posts-section">
     <h1>All Posts</h1>
     {% for post in posts %}
-    <div class = "post" id="post-{{post.id}}">
+    <div class="post" id="post-{{post.id}}">
 
         <div class="post-user"><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
 
-            {% if user == post.user %}
-            <div>
-                <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-user={{user}} data-action="edit" style="display: block;">Edit</button>
-            </div>
+        {% if user == post.user %}
+        <div>
+            <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-action="edit"
+                style="display: block;">Edit</button>
+        </div>
 
-            {% endif %}
+        {% endif %}
 
-            <p  id="post-text-{{post.id}}" >Post: {{post.post}}</p>
+            <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
+        <div>
             <p>{{post.timestamp}} </p>
-            <!-- <a href="{% url 'like' post=post.pk %}"><p id="like">Likes: {{post.likes}} </p></a>  -->
+        </div>
+        <button id="like" data-liked="false" data-id={{post.id}}> &#x1F90D </button>
+
     </div>
-        {% endfor %}
+    {% endfor %}
 </div>
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-      <li class="page-item"><a class="page-link" href="{% url 'make_page' pagenum=page_num %}">Previous</a></li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        <li class="page-item"><a class="page-link" href="{% url 'make_page' pagenum=page_num %}">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
     </ul>
-  </nav>
+</nav>
 
-  <script src="{% static 'network/edit.js' %}"></script>
 
 {% endblock %}

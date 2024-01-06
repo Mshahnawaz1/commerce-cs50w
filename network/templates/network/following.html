@@ -1,21 +1,34 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 {% if user.is_authenticated %}
 
-
-
 <div class="posts-section">
-    <h1>All Posts</h1>
+    <h3>Followings</h3>
     {% for post in posts %}
-        <div class="posts">
-            <a href="{% url 'profile' username=post.user%}"><p>{{post.user}} </p> </a> 
-            <p>{{post.timestamp}} </p>
-            <p>Post: {{post.post}} </p>
-            <p>Likes: {{post.likes}} </p>
+    <div class="post" id="post-{{post.id}}">
+
+        <div class="post-user"><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
+
+        {% if user == post.user %}
+        <div>
+            <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-action="edit"
+                style="display: block;">Edit</button>
         </div>
-        {% endfor %}
+
+        {% endif %}
+
+        <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
+        <div>
+            <p>{{post.timestamp}} </p>
+        </div>
+        <button id="like" data-liked="false" data-id={{post.id}}> &#x1F90D </button>
+
+    </div>
+    {% endfor %}
 </div>
+
 {% endif %}
 
 

@@ -31,4 +31,11 @@ class Likes(models.Model):
     post = models.ForeignKey(Posts, on_delete=models.CASCADE,blank=True, related_name='liked_post')
     timestamp=models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        # ensure  user can only follow one per one time
+        unique_together = ('user', 'post')
+
+    def __str__(self):
+        return f"{self.user} likes {self.post}"
+
 # python manage.py makemigrations

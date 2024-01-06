@@ -88,7 +88,7 @@ def profile(request, username):
     try:
         profile_user = User.objects.get(username=username)
         session_user = User.objects.get(username=request.user.username)
-        print(profile_user, session_user)
+
     except:
         return render(request, "network/error.html")
 
@@ -117,21 +117,18 @@ def follow(request):
     if request.method == "POST":
         user = request.POST.get('user')
         action = request.POST.get('action')
-        print(user, action)
 
         try:
             session_user = User.objects.get(username=request.user.username)
             profile_user = User.objects.get(username=user)
         except:
             return JsonResponse({"error": "User not found"}, status=403)
-        print(session_user, profile_user)
 
         # make the follow and unfollow action
         if action == "Follow":
             new_data = Follow.objects.create(
                 user=session_user, followed=profile_user)
             new_data.save()
-            print("followed")
             
             response_data = {
                 "status" : "201",
@@ -144,7 +141,7 @@ def follow(request):
 
             data = Follow.objects.get(user=session_user, followed=profile_user)
             data.delete()
-            print("unfollowed")
+
             response_data = {
                 "status" : "201",
                 "message": "Unfollowed user",
@@ -199,3 +196,41 @@ def edit(request):
 
     }
     return JsonResponse({"message": "hell", "post" : postText}, status=201)
+
+def like(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        action = request.POST.get("action")
+        print(id, action)
+
+        try:
+            post = Posts.objects.get(id=id)
+            print(post)
+        except:
+            return JsonResponse({"error" : "cannot find post"}, status=403)
+        
+        # update the db
+        if (action == "like"):
+            
+            try:
+                newdata = Likes.objects.create(user=request.user, post=post)
+                print(newdata)
+                newdata.save()
+                return JsonResponse({"message": "liked the post"}, status=201)
+            except:
+                return JsonResponse({"error" : "cannot like post"}, status=403)
+
+        elif (action == "unlike"):
+            try:
+                data = Likes.objects.get(user=request.user, post=post)
+                data.delete()
+                return JsonResponse({"message": "Unliked the post"}, status=201)
+            except:
+                return JsonResponse({"error" : "cannot unlike post"}, status=403)
+
+    return JsonResponse({"error": "Cannot perform the request."}, status=403)
+
+
+# def likesNum(post_id):
+#     post = Post.objects.get()
+#     post = Likes.objects.filter(post=post)
