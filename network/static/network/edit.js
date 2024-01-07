@@ -58,6 +58,8 @@ function edit(btn) {
         btn.dataset.action = "submit";
         btn.innerHTML = "Submit";
 
+        likes
+
     }
     else if (btn.dataset.action == "submit") {
         const post = document.querySelector(`#text-area-${id}`).value

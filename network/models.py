@@ -12,7 +12,7 @@ class Posts(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} posted {self.post}"
+        return f"{self.id} :{self.post}"
 
 class Follow(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
@@ -27,7 +27,7 @@ class Follow(models.Model):
         return f"{self.user} follows {self.followed}"
 
 class Likes(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name="Liked" )
+    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name="liked" )
     post = models.ForeignKey(Posts, on_delete=models.CASCADE,blank=True, related_name='liked_post')
     timestamp=models.DateTimeField(auto_now_add=True)
 
@@ -36,6 +36,6 @@ class Likes(models.Model):
         unique_together = ('user', 'post')
 
     def __str__(self):
-        return f"{self.user} likes {self.post}"
+        return f"{self.user} liked {self.post}"
 
 # python manage.py makemigrations

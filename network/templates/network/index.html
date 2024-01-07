@@ -22,7 +22,7 @@
     {% for post in posts %}
     <div class="post" id="post-{{post.id}}">
 
-        <div class="post-user"><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
+        <div><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
 
         {% if user == post.user %}
         <div>
@@ -34,9 +34,11 @@
 
             <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
         <div>
-            <p>{{post.timestamp}} </p>
+            <p>{{post.timestamp}} ,{{post.likedBy}} </p>
         </div>
-        <button id="like" data-liked="false" data-id={{post.id}}> &#x1F90D </button>
+        <p> </p>
+        <button id="like" data-liked="false" data-id={{post.id}}> &#x1F90D </button> 
+        
 
     </div>
     {% endfor %}

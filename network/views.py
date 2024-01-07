@@ -10,27 +10,6 @@ from django.core.paginator import Paginator
 
 from .models import *
 
-
-def index(request):
-    if request.method == 'POST':
-        new_data = request.POST.get("post")
-
-        # add new post to db
-        new_post = Posts.objects.create(post=new_data, user=request.user)
-        new_post.save()
-        return HttpResponseRedirect(reverse("index"))
-
-    else:
-        all_post = Posts.objects.order_by('-timestamp')
-        p = Paginator(all_post, 10)
-
-
-        return render(request, "network/index.html", {
-            "posts": p.page(1).object_list,
-            "page_num": 1
-        })
-
-
 def login_view(request):
     if request.method == "POST":
 
@@ -81,6 +60,40 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def index(request):
+    if request.method == 'POST':
+        new_data = request.POST.get("post")
+
+        # add new post to db
+        new_post = Posts.objects.create(post=new_data, user=request.user)
+        new_post.save()
+        return HttpResponseRedirect(reverse("index"))
+
+    else:
+        all_post = Posts.objects.order_by('-timestamp')
+        p = Paginator(all_post, 10)
+        x= p.page(1).object_list
+
+        # check if user liked post
+        # data=[]
+        # for post in all_post:
+        #     tmp = likedBy(request.user, post)
+        #     d = {
+        #         'post' :post,
+        #         'likedBy' : tmp
+        #     }
+        #     data.append(d)
+        #     print(data.likedBy)
+
+        # print(data.)
+
+
+        return render(request, "network/index.html", {
+            "posts": all_post,
+            "page_num": 1
+        })
 
 
 def profile(request, username):
@@ -201,8 +214,10 @@ def like(request):
     if request.method == "POST":
         id = request.POST.get("id")
         action = request.POST.get("action")
-        print(id, action)
 
+        # test 
+        likesNum(id)
+        likedBy("user", "id")
         try:
             post = Posts.objects.get(id=id)
             print(post)
@@ -214,9 +229,13 @@ def like(request):
             
             try:
                 newdata = Likes.objects.create(user=request.user, post=post)
-                print(newdata)
                 newdata.save()
-                return JsonResponse({"message": "liked the post"}, status=201)
+
+                response_data = {
+                    "status" : "201",
+                    "likes" : Likes.objects.filter(post=post).count()
+                }
+                return JsonResponse(response_data, status=201)
             except:
                 return JsonResponse({"error" : "cannot like post"}, status=403)
 
@@ -224,13 +243,34 @@ def like(request):
             try:
                 data = Likes.objects.get(user=request.user, post=post)
                 data.delete()
-                return JsonResponse({"message": "Unliked the post"}, status=201)
+ 
+                response_data = {
+                    "message": "Unliked the post",
+                    "status" : "201",
+                    "likes" : Likes.objects.filter(post=post).count()
+                }
+                return JsonResponse(response_data, status=201)
             except:
                 return JsonResponse({"error" : "cannot unlike post"}, status=403)
 
     return JsonResponse({"error": "Cannot perform the request."}, status=403)
 
+# number of likes a post has
+def likesNum(post):
+    # post = Posts.objects.get(id=post_id)
 
-# def likesNum(post_id):
-#     post = Post.objects.get()
-#     post = Likes.objects.filter(post=post)
+    liked = Likes.objects.filter(post=post).count()
+
+    # print("this is likes" ,liked)
+
+# checks if user liked post
+def likedBy(user, post):
+    # user=User.objects.get(username= "")
+    # post= Posts.objects.get(id=11)
+    try:
+        likes = Likes.objects.get(user=user, post=post)
+        print("likes::::", likes)
+        return True
+    except:
+        print(False)
+        return False
