@@ -26,6 +26,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="username" href="{% url 'profile' username=user.username%}"><strong>{{ user.username }}</strong></a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="add-post" >Add post</a>
+                    </li>
                 {% endif %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'index' %}">All Posts</a>

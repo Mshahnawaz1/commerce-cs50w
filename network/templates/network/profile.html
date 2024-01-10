@@ -1,4 +1,4 @@
-{% extends "network/layout.html" %} 
+{% extends "network/layout.html" %}
 {% load static %}
 
 {% block body %}
@@ -13,24 +13,25 @@
 {% if user.username != profile_user.username %}
 
 <div class="follow-section">
- 
-        {% if is_following %}
-        <button id="follow-btn" data-user="{{profile_user.username}}">Unfollow</button>        
-        {% else %}
-        <button id="follow-btn"  data-user="{{profile_user.username}}">Follow</button>
 
-    
+    {% if is_following %}
+    <button id="follow-btn" data-user="{{profile_user.username}}">Unfollow</button>
+    {% else %}
+    <button id="follow-btn" data-user="{{profile_user.username}}">Follow</button>
+
+
     {% endif %}
 </div>
 
 {% endif %}
 
 <div class="posts-section">
-    <h1>Posts</h1>
+    <h1>All Posts</h1>
     {% for post in posts %}
+
     <div class="post" id="post-{{post.id}}">
 
-        <div class="post-user"><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
+        <div><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
 
         {% if user == post.user %}
         <div>
@@ -40,12 +41,19 @@
 
         {% endif %}
 
-            <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
+        <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
         <div>
-            <p>{{post.timestamp}} </p>
+            <p>{{post.timestamp}}</p>
         </div>
-        <button id="like" data-liked="false" data-id={{post.id}}> &#x1F90D </button>
+        <span id="post-count-{{post.id}}">{{post.like.all.count}}</span>
 
+        {% if user.is_authenticated %}
+        {% if user in post.like.all %}
+        <button id="like" data-liked="true" data-id={{post.id}}>&#10084</button>
+        {% else %}
+        <button id="like" data-liked="false" data-id={{post.id}}>&#x1F90D</button>
+        {% endif %}
+        {% endif %}
     </div>
     {% endfor %}
 </div>

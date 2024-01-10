@@ -5,12 +5,20 @@ document.addEventListener('DOMContentLoaded', function () {
         // here should check if div is clicked instead of btn
         const btn = event.target;
 
-        console.log(btn.id)
+        // make add post appear
+        if (btn.id == "add-post"){
+            console.log("add")
+            document.querySelector('.new-post').style.display = "block";
+        }
+        // edit your post
         if (btn.id == "edit-btn") {
+            console.log("edit")
             edit(btn);
         }
 
+        // like on post
         if (btn.id == "like") {
+            console.log("like")
             like(btn);
         }
     })
@@ -40,9 +48,8 @@ function edit(btn) {
     const user = btn.dataset.user;
     const parentElement = document.querySelector(`#post-${id}`)
 
-
-    console.log(btn.dataset.id, btn.dataset.action, btn.dataset.user)
-    if (btn.dataset.action == "/edit") {
+    console.log(btn.dataset.id, btn.dataset.action)
+    if (btn.dataset.action == "edit") {
         // when btn clicked for edit
         const postText = document.querySelector(`#post-text-${id}`);
 
@@ -57,9 +64,6 @@ function edit(btn) {
 
         btn.dataset.action = "submit";
         btn.innerHTML = "Submit";
-
-        likes
-
     }
     else if (btn.dataset.action == "submit") {
         const post = document.querySelector(`#text-area-${id}`).value
@@ -77,7 +81,7 @@ function edit(btn) {
                 // element is created and replaced with textarea
                 const postElement = document.createElement('p')
                 postElement.id = `post-text-${id}`
-                postElement.textContent = res.post
+                postElement.textContent = `Post: ${res.post}`
 
                 parentElement.replaceChild(postElement, textArea)
 
@@ -87,6 +91,51 @@ function edit(btn) {
     }
 }
 
+// function like(btn) {
+
+//     const id = btn.dataset.id;
+//     let liked = btn.dataset.liked;
+
+//     form = new FormData()
+//     form.append("id", id)
+
+//     if (liked == "false") {
+
+//         form.append("action", "like")
+//         // make fetch request 
+//         fetch_request(form, "/like/")
+//             .then(res => {
+//                 console.log(res.message)
+//                 console.log(btn.innerHTML)
+//                 btn.innerHTML = '&#10084'
+//                 btn.dataset.liked = 'true'
+
+//             })
+//             .catch(error => {
+//                 // Handle errors here
+//                 console.error('Error:', error.message);
+//             })
+//     }
+//     else if (liked == 'true') {
+
+//         form.append("action", "unlike")
+
+//         fetch_request(form, "/like/")
+//             .then(res => {
+//                 console.log(res.message)
+//                 console.log(btn.innerHTML)
+//                 btn.innerHTML = '&#x1F90D'
+
+//                 btn.dataset.liked = 'false'
+
+//             })
+//             // .catch(error => {
+//             //     // Handle errors here
+//             //     console.error('Error:', error.message);
+//             // })
+//     }
+// }
+
 function like(btn) {
 
     const id = btn.dataset.id;
@@ -94,43 +143,22 @@ function like(btn) {
 
     form = new FormData()
     form.append("id", id)
+    form.append("status", liked)
 
-    if (liked == "false") {
-
-        form.append("action", "like")
         // make fetch request 
         fetch_request(form, "/like/")
             .then(res => {
-                console.log(res.message)
-                console.log(btn.innerHTML)
-                btn.innerHTML = '&#10084'
-                btn.dataset.liked = 'true'
 
+                btn.innerHTML = res.liked == "true"? '&#10084' : '&#x1F90D';
+                btn.dataset.liked = res.liked
+
+                document.querySelector( `#post-count-${id}`).innerHTML = res.likes
             })
             .catch(error => {
                 // Handle errors here
                 console.error('Error:', error.message);
             })
-    }
-    else if (liked == 'true') {
-
-        form.append("action", "unlike")
-        fetch_request(form, "/like/")
-            .then(res => {
-                console.log(res.message)
-                console.log(btn.innerHTML)
-                btn.innerHTML = '&#x1F90D'
-
-                btn.dataset.liked = 'false'
-
-            })
-            .catch(error => {
-                // Handle errors here
-                console.error('Error:', error.message);
-            })
-    }
 }
-
 
 function fetch_request(form, url) {
 
@@ -151,3 +179,19 @@ function fetch_request(form, url) {
         })
 
 }
+
+
+// function addPost(){
+//     document.querySelector('.new-post').style.display = "block";
+//     document.querySelector('#new-post-btn').addEventListener('click', () => {
+//         const text = document.querySelector('#new-post-text').value
+
+//         form = new FormData()
+//         form.append("post", text)
+
+//         fetch_request(form, "/")
+//         .then(res => {
+//             console.log(res)
+//         })
+//     })
+// }

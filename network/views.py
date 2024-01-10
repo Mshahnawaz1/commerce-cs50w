@@ -67,28 +67,21 @@ def index(request):
         new_data = request.POST.get("post")
 
         # add new post to db
-        new_post = Posts.objects.create(post=new_data, user=request.user)
+        new_post = Post.objects.create(post=new_data, user=request.user)
         new_post.save()
         return HttpResponseRedirect(reverse("index"))
 
     else:
-        all_post = Posts.objects.order_by('-timestamp')
+        all_post = Post.objects.order_by('-timestamp')
         p = Paginator(all_post, 10)
         x= p.page(1).object_list
 
-        # check if user liked post
-        # data=[]
-        # for post in all_post:
-        #     tmp = likedBy(request.user, post)
-        #     d = {
-        #         'post' :post,
-        #         'likedBy' : tmp
-        #     }
-        #     data.append(d)
-        #     print(data.likedBy)
+        posts = Post.objects.all()
+        print(request.user)
 
-        # print(data.)
-
+        for post in posts:
+            if request.user in post.like.all():
+                print(post.like.all(), post.id)
 
         return render(request, "network/index.html", {
             "posts": all_post,
@@ -112,7 +105,7 @@ def profile(request, username):
     # handle get request
     if request.method == "GET":
 
-        posts = Posts.objects.filter(user=profile_user).order_by('-timestamp')
+        posts = Post.objects.filter(user=profile_user).order_by('-timestamp')
 
         print("profile load...")
         followings = profile_user.following.all().count()
@@ -173,10 +166,9 @@ def following(request, username):
     # get all posts from user followings party
     posts = []
     for f in followings:
-        post = Posts.objects.filter(user=f.followed)
+        post = Post.objects.filter(user=f.followed)
         posts.extend(post)
 
-    print(posts)
     return render(request, "network/following.html", {
         "posts": posts
     })
@@ -197,7 +189,7 @@ def edit(request):
 
         try:
             # checks if request is from owner of page
-            post = Posts.objects.get(pk=id, user=request.user)
+            post = Post.objects.get(pk=id, user=request.user)
             post.post = postText
             post.save()
         except:
@@ -210,44 +202,44 @@ def edit(request):
     }
     return JsonResponse({"message": "hell", "post" : postText}, status=201)
 
-def like(request):
+def lik(request):
     if request.method == "POST":
         id = request.POST.get("id")
-        action = request.POST.get("action")
+        liked = request.POST.get("action")
 
-        # test 
-        likesNum(id)
-        likedBy("user", "id")
+        print(id, liked)
         try:
-            post = Posts.objects.get(id=id)
-            print(post)
+            post = Post.objects.get(id=id)
+            print("liked", post)
         except:
             return JsonResponse({"error" : "cannot find post"}, status=403)
-        
+
         # update the db
-        if (action == "like"):
+        if (liked == "false"):
             
             try:
-                newdata = Likes.objects.create(user=request.user, post=post)
-                newdata.save()
+                post.like.add(request.user)
+                post.save()
 
+                console.log(post)
                 response_data = {
                     "status" : "201",
-                    "likes" : Likes.objects.filter(post=post).count()
+                    "message" : "successfully liked post"
+                    
                 }
                 return JsonResponse(response_data, status=201)
             except:
                 return JsonResponse({"error" : "cannot like post"}, status=403)
 
-        elif (action == "unlike"):
+        else:
             try:
-                data = Likes.objects.get(user=request.user, post=post)
-                data.delete()
- 
+                post.like.remove(request.user)
+                post.save()
+                
                 response_data = {
                     "message": "Unliked the post",
                     "status" : "201",
-                    "likes" : Likes.objects.filter(post=post).count()
+                    "likes" : post.like.all().count()
                 }
                 return JsonResponse(response_data, status=201)
             except:
@@ -255,22 +247,36 @@ def like(request):
 
     return JsonResponse({"error": "Cannot perform the request."}, status=403)
 
-# number of likes a post has
-def likesNum(post):
-    # post = Posts.objects.get(id=post_id)
 
-    liked = Likes.objects.filter(post=post).count()
+def like(request):
+    if request.method == "POST":
+        liked = request.POST.get("status")
+        id = request.POST.get("id")
 
-    # print("this is likes" ,liked)
+        try:
+            post = Post.objects.get(id=id)
+            print("post",post)
+        except:
+                return JsonResponse({"error" : "cannot find post"}, status=403)
 
-# checks if user liked post
-def likedBy(user, post):
-    # user=User.objects.get(username= "")
-    # post= Posts.objects.get(id=11)
-    try:
-        likes = Likes.objects.get(user=user, post=post)
-        print("likes::::", likes)
-        return True
-    except:
-        print(False)
-        return False
+
+        if (liked == "true" and request.user in post.like.all()):
+            post.like.remove(request.user)
+            liked = "false"
+        else:
+            post.like.add(request.user)
+            liked = "true"
+    
+        response_data = {
+                    "status" : "201",
+                    "message" : "successfully liked post",
+                    "liked" : liked,
+                    "likes" : post.like.all().count()
+                }
+        return JsonResponse(response_data, status=201)
+
+
+
+
+
+
