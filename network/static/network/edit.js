@@ -7,18 +7,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // make add post appear
         if (btn.id == "add-post"){
-            console.log("add")
-            document.querySelector('.new-post').style.display = "block";
+            console.log(btn)
+            document.querySelector('.new-post').style.display= 'block';
+            // addPost(btn); TODO
         }
         // edit your post
         if (btn.id == "edit-btn") {
-            console.log("edit")
             edit(btn);
         }
 
         // like on post
         if (btn.id == "like") {
-            console.log("like")
             like(btn);
         }
     })
@@ -91,50 +90,6 @@ function edit(btn) {
     }
 }
 
-// function like(btn) {
-
-//     const id = btn.dataset.id;
-//     let liked = btn.dataset.liked;
-
-//     form = new FormData()
-//     form.append("id", id)
-
-//     if (liked == "false") {
-
-//         form.append("action", "like")
-//         // make fetch request 
-//         fetch_request(form, "/like/")
-//             .then(res => {
-//                 console.log(res.message)
-//                 console.log(btn.innerHTML)
-//                 btn.innerHTML = '&#10084'
-//                 btn.dataset.liked = 'true'
-
-//             })
-//             .catch(error => {
-//                 // Handle errors here
-//                 console.error('Error:', error.message);
-//             })
-//     }
-//     else if (liked == 'true') {
-
-//         form.append("action", "unlike")
-
-//         fetch_request(form, "/like/")
-//             .then(res => {
-//                 console.log(res.message)
-//                 console.log(btn.innerHTML)
-//                 btn.innerHTML = '&#x1F90D'
-
-//                 btn.dataset.liked = 'false'
-
-//             })
-//             // .catch(error => {
-//             //     // Handle errors here
-//             //     console.error('Error:', error.message);
-//             // })
-//     }
-// }
 
 function like(btn) {
 
@@ -180,18 +135,20 @@ function fetch_request(form, url) {
 
 }
 
+// function addPost(btn){
+//     form= document.querySelector('.new-post')
+//     // form.style.display = 'block'
 
-// function addPost(){
-//     document.querySelector('.new-post').style.display = "block";
-//     document.querySelector('#new-post-btn').addEventListener('click', () => {
-//         const text = document.querySelector('#new-post-text').value
+//     console.log(btn.dataset.visible)
+//     if(btn.dataset.visible === 'false'){
+//         console.log(btn.dataset.visible)
 
-//         form = new FormData()
-//         form.append("post", text)
+//         form.style.display == 'block'
+//         btn.dataset.visible == 'true'
+//     }
+//     else{
+//         form.style.display == 'none';
+//         btn.dataset.visible = 'false';
+//     }
 
-//         fetch_request(form, "/")
-//         .then(res => {
-//             console.log(res)
-//         })
-//     })
 // }

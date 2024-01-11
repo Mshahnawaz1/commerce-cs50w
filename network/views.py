@@ -73,21 +73,16 @@ def index(request):
 
     else:
         all_post = Post.objects.order_by('-timestamp')
-        p = Paginator(all_post, 10)
-        x= p.page(1).object_list
+        pageNum = request.GET.get('page')
 
-        posts = Post.objects.all()
-        print(request.user)
+        # this function makes paginations
+        post= make_pages(all_post, pageNum)
 
-        for post in posts:
-            if request.user in post.like.all():
-                print(post.like.all(), post.id)
+        context = {
+            "posts" : post,
 
-        return render(request, "network/index.html", {
-            "posts": all_post,
-            "page_num": 1
-        })
-
+        }
+        return render(request, "network/index.html",context)
 
 def profile(request, username):
     # get request.user data and get info
@@ -174,14 +169,6 @@ def following(request, username):
     })
 
 
-def make_pages(request, page_id):
-    # TODO
-    return HttpResponse("sdfjkl")
-
-def like(request, page):
-    
-    return JsonResponse({"error": "Cannot perform the request."}, status=403)
-
 def edit(request):
     if request.method == "POST":
         postText = request.POST.get("post")
@@ -201,52 +188,6 @@ def edit(request):
 
     }
     return JsonResponse({"message": "hell", "post" : postText}, status=201)
-
-def lik(request):
-    if request.method == "POST":
-        id = request.POST.get("id")
-        liked = request.POST.get("action")
-
-        print(id, liked)
-        try:
-            post = Post.objects.get(id=id)
-            print("liked", post)
-        except:
-            return JsonResponse({"error" : "cannot find post"}, status=403)
-
-        # update the db
-        if (liked == "false"):
-            
-            try:
-                post.like.add(request.user)
-                post.save()
-
-                console.log(post)
-                response_data = {
-                    "status" : "201",
-                    "message" : "successfully liked post"
-                    
-                }
-                return JsonResponse(response_data, status=201)
-            except:
-                return JsonResponse({"error" : "cannot like post"}, status=403)
-
-        else:
-            try:
-                post.like.remove(request.user)
-                post.save()
-                
-                response_data = {
-                    "message": "Unliked the post",
-                    "status" : "201",
-                    "likes" : post.like.all().count()
-                }
-                return JsonResponse(response_data, status=201)
-            except:
-                return JsonResponse({"error" : "cannot unlike post"}, status=403)
-
-    return JsonResponse({"error": "Cannot perform the request."}, status=403)
-
 
 def like(request):
     if request.method == "POST":
@@ -275,8 +216,86 @@ def like(request):
                 }
         return JsonResponse(response_data, status=201)
 
+# this return post objects , prev , next
+# def make_pages(all_post,pageNum):
+#     next = prev = None
+#     p = Paginator(all_post,10)
+
+#     if pageNum != None:
+#         pageNum = int(pageNum)
+
+#         try:
+#             post = p.page(pageNum)
+#         except:
+#             post = p.page(1)
+#             # get next an prev 
+#         if p.num_pages > pageNum:
+#             next = pageNum + 1
+#         if pageNum > 1 :
+#             prev = pageNum - 1
+#     else :
+#         post = p.page(1)
+
+#     return post.object_list, prev, next
+
+def make_pages(all_post,num):
+    p = Paginator(all_post, 10)
+    if num == None:
+        post = p.page(1)
+    else:
+        try:
+            post = p.page(num)
+        except:
+            post = p.page(1)
+    return post
+    
+# TODO add next feature 
 
 
 
 
+#dump/bins 
+# def lik(request):
+#     if request.method == "POST":
+#         id = request.POST.get("id")
+#         liked = request.POST.get("action")
 
+#         print(id, liked)
+#         try:
+#             post = Post.objects.get(id=id)
+#             print("liked", post)
+#         except:
+#             return JsonResponse({"error" : "cannot find post"}, status=403)
+
+#         # update the db
+#         if (liked == "false"):
+            
+#             try:
+#                 post.like.add(request.user)
+#                 post.save()
+
+#                 console.log(post)
+#                 response_data = {
+#                     "status" : "201",
+#                     "message" : "successfully liked post"
+                    
+#                 }
+#                 return JsonResponse(response_data, status=201)
+#             except:
+#                 return JsonResponse({"error" : "cannot like post"}, status=403)
+
+#         else:
+#             try:
+#                 post.like.remove(request.user)
+#                 post.save()
+                
+#                 response_data = {
+#                     "message": "Unliked the post",
+#                     "status" : "201",
+#                     "likes" : post.like.all().count()
+#                 }
+#                 return JsonResponse(response_data, status=201)
+#             except:
+#                 return JsonResponse({"error" : "cannot unlike post"}, status=403)
+
+#     return JsonResponse({"error": "Cannot perform the request."}, status=403)

@@ -3,39 +3,8 @@
 
 {% block body %}
 {% if user.is_authenticated %}
-
-<div class="posts-section">
-    <h1>All Posts</h1>
-    {% for post in posts %}
-
-    <div class="post" id="post-{{post.id}}">
-
-        <div><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
-
-        {% if user == post.user %}
-        <div>
-            <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-action="edit"
-                style="display: block;">Edit</button>
-        </div>
-
-        {% endif %}
-
-        <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
-        <div>
-            <p>{{post.timestamp}}</p>
-        </div>
-        <span id="post-count-{{post.id}}">{{post.like.all.count}}</span>
-
-        {% if user.is_authenticated %}
-        {% if user in post.like.all %}
-        <button id="like" data-liked="true" data-id={{post.id}}>&#10084</button>
-        {% else %}
-        <button id="like" data-liked="false" data-id={{post.id}}>&#x1F90D</button>
-        {% endif %}
-        {% endif %}
-    </div>
-    {% endfor %}
-</div>
+<h2>Followings</h2>
+{% include 'network/allPost.html' %}
 
 {% endif %}
 

@@ -4,8 +4,9 @@
 {% block body %}
 {% if user.is_authenticated %}
 <span class="material-icons-outlined">
-    search
 </span>
+<button id="add-post" class="btn btn-primary" data-visible="false">Add post</button>
+
 <div class="new-post" style="display: none;">
     <h4>Add a new post</h4>
     <form action="{% url 'index' %}" method="post">
@@ -15,47 +16,7 @@
     </form>
 </div>
 {% endif %}
-
-<div class="posts-section">
-    <h1>All Posts</h1>
-    {% for post in posts %}
-
-    <div class="post" id="post-{{post.id}}">
-
-        <div><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
-
-        {% if user == post.user %}
-        <div>
-            <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-action="edit"
-                style="display: block;">Edit</button>
-        </div>
-
-        {% endif %}
-
-        <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
-        <div>
-            <p>{{post.timestamp}}</p>
-        </div>
-        <span id="post-count-{{post.id}}">{{post.like.all.count}}</span>
-
-        {% if user.is_authenticated %}
-        {% if user in post.like.all %}
-        <button id="like" data-liked="true" data-id={{post.id}}>&#10084</button>
-        {% else %}
-        <button id="like" data-liked="false" data-id={{post.id}}>&#x1F90D</button>
-        {% endif %}
-        {% endif %}
-    </div>
-    {% endfor %}
-</div>
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="{% url 'make_page' pagenum=page_num %}">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-    </ul>
-</nav>
-
+    <!-- Include all post  -->
+    {% include 'network/allPost.html' %}
 
 {% endblock %}
