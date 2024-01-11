@@ -1,7 +1,14 @@
 body{
-    margin: 5px;
+    margin: 2% 6%;
+    background-color: rgb(59, 88, 112);
+
 }
 .posts{
-    margin-left: 10px;
-    background-color: rgb(209, 231, 223);
+    
 }
+
+.post{
+    background-color: rgba(148, 172, 193, 0.757);
+    margin-bottom: 2%;
+}
+.post 

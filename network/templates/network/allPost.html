@@ -4,27 +4,27 @@
 
     <div class="post" id="post-{{post.id}}">
 
-        <div><a href="{% url 'profile' username=post.user%}">{{post.user}}</a></div>
-
         {% if user == post.user %}
         <div>
-            <button class="edit btn btn-primary" id="edit-btn" data-id={{post.id}} data-action="edit"
+            <button class="edit btn btn-secondary btn-sm" id="edit-btn" data-id={{post.id}} data-action="edit"
                 style="display: block;">Edit</button>
         </div>
 
         {% endif %}
-
+        
         <p id="post-text-{{post.id}}">Post: {{post.post}}</p>
-        <div>
-            <p>{{post.timestamp}}</p>
+        <hr>
+
+        <div class="post-info">
+            <p> By<a href="{% url 'profile' username=post.user%}"><strong>@{{post.user}}</strong></a> on {{post.timestamp}}</p>
         </div>
         <span id="post-count-{{post.id}}">{{post.like.all.count}}</span>
 
         {% if user.is_authenticated %}
         {% if user in post.like.all %}
-        <button id="like" data-liked="true" data-id={{post.id}}>&#10084</button>
+        <span class="btn" id="like" data-liked="true" data-id={{post.id}}>&#10084</span>
         {% else %}
-        <button id="like" data-liked="false" data-id={{post.id}}>&#x1F90D</button>
+        <span class="btn" id="like" data-liked="false" data-id={{post.id}}>&#x1F90D</span>
         {% endif %}
         {% endif %}
     </div>
@@ -32,15 +32,25 @@
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <li class="page-item"><a class="page-link"
-                    href="{% url 'index' %}?page={{post.previous_page_number}}">Previous</a></li>
-            {% endif %}
+            {% if posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{posts.previous_page_number}}" aria-label="Prev">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </li>
+            {%else%}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Prev">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Prev</span>
+                </a>
+            </li>
+            {%endif%}
 
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{post.next_page_number}}" aria-label="Next">
+                <a class="page-link" href="?page={{posts.next_page_number}}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -55,9 +65,3 @@
             {%endif%}
         </ul>
     </nav>
-
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
