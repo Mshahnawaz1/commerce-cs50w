@@ -1,14 +1,62 @@
 body{
     margin: 2% 6%;
-    background-color: rgb(59, 88, 112);
+    background-color: rgb(161, 213, 255);
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url('bg_network.jpg');
+    
+    background-repeat: repeat;
+
 
 }
-.posts{
+.navbar{
+    /* background-color: rgb(113, 177, 164); */
+    border-radius: 15px;
+    padding: 10px;
+}
+.posts-section{
+    margin : 0px 15% 0px 15%;
+
     
 }
 
 .post{
-    background-color: rgba(148, 172, 193, 0.757);
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); */
+
+    background-color: rgba(224, 225, 197, 0.906);
     margin-bottom: 2%;
+    padding: 1%;
+    border: 2px solid darkblue;
+
 }
-.post 
+.headings {
+    font-size: xx-large;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+}
+.profile-section{
+    background-color: rgba(254, 255, 225, 0.906);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button {
+    border: 2px solid rgb(164, 232, 249);
+    border-radius: 10px;
+    color : rgb(0, 0, 0);
+    background-color: rgba(151, 170, 229, 0.759);
+}
+.txt-lg{
+    font-size: xx-large;
+    font-weight:bolder;
+    font-style: italic;
+    color: rgb(8, 8, 155);
+}
+.logo{
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+}

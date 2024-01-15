@@ -216,28 +216,6 @@ def like(request):
                 }
         return JsonResponse(response_data, status=201)
 
-# this return post objects , prev , next
-# def make_pages(all_post,pageNum):
-#     next = prev = None
-#     p = Paginator(all_post,10)
-
-#     if pageNum != None:
-#         pageNum = int(pageNum)
-
-#         try:
-#             post = p.page(pageNum)
-#         except:
-#             post = p.page(1)
-#             # get next an prev 
-#         if p.num_pages > pageNum:
-#             next = pageNum + 1
-#         if pageNum > 1 :
-#             prev = pageNum - 1
-#     else :
-#         post = p.page(1)
-
-#     return post.object_list, prev, next
-
 def make_pages(all_post,num):
     p = Paginator(all_post, 10)
     if num == None:
@@ -248,11 +226,6 @@ def make_pages(all_post,num):
         except:
             post = p.page(1)
     return post
-    
-# TODO add next feature 
-
-
-
 
 #dump/bins 
 # def lik(request):

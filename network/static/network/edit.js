@@ -57,7 +57,7 @@ function edit(btn) {
         textArea.id = `text-area-${id}`
         textArea.value = postText.textContent.replace("Post: ", "");
         textArea.rows = 3;
-        textArea.cols = 60;
+        textArea.cols = 90;
 
         parentElement.replaceChild(textArea, postText)
 

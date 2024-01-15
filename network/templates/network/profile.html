@@ -1,28 +1,30 @@
-{% extends "network/layout.html" %} 
+{% extends "network/layout.html" %}
 {% load static %}
 
 {% block body %}
-<div class="profile" id="username">{{profile_user}} </div>
-<div class="info">
-    <div id="followers">Followers: {{ profile_user.followers.count }} </div>
-    <div id="following">Followings: {{ profile_user.following.count }} </div>
-</div>
+<div class="profile-section">
+    <div class="info">
+        <div class="profile txt-lg" id="username">{{profile_user}} </div>
+        <div class="follwer">
+            <div id="followers">Followers: {{ profile_user.followers.count }} </div>
+            <div id="following">Followings: {{ profile_user.following.count }} </div>
+        </div>
+    </div>
 
-{% if user.is_authenticated %}
 
-{% if user.username != profile_user.username %}
+    {% if user.is_authenticated %}
 
-<div class="follow-section">
- 
+    {% if user.username != profile_user.username %}
+
+    <div class="follow-section">
+
         {% if is_following %}
-        <button id="follow-btn" data-user="{{profile_user.username}}">Unfollow</button>        
+        <button id="follow-btn" class="button " data-user="{{profile_user.username}}">Unfollow</button>
         {% else %}
-        <button id="follow-btn"  data-user="{{profile_user.username}}">Follow</button>
-
-    
-    {% endif %}
+        <button id="follow-btn" class="button " data-user="{{profile_user.username}}">Follow</button>
+        {% endif %}
+    </div>
 </div>
-
 {% endif %}
 
 {% include 'network/allPost.html' %}
