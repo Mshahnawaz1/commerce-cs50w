@@ -11,7 +11,7 @@ class Post(models.Model):
     post = models.TextField(blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     like = models.ManyToManyField(
-        User,  blank=True, related_name="liked_user")
+            User,blank=True, related_name="liked_user")
 
     def __str__(self):
         return f"{self.id} :{self.post}"

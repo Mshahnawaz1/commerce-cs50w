@@ -85,10 +85,17 @@ def index(request):
         return render(request, "network/index.html",context)
 
 def profile(request, username):
+    
     # get request.user data and get info
     try:
         profile_user = User.objects.get(username=username)
         session_user = User.objects.get(username=request.user.username)
+        
+        # when user is not logged in 
+    except User.DoesNotExist:
+        return render(request, "network/profile.html", {
+            "profile_user" : profile_user
+        })
 
     except:
         return render(request, "network/error.html")
@@ -164,8 +171,9 @@ def following(request, username):
         post = Post.objects.filter(user=f.followed)
         posts.extend(post)
 
+    print(posts[::-1])
     return render(request, "network/following.html", {
-        "posts": posts
+        "posts": posts[::-1]
     })
 
 

@@ -14,16 +14,15 @@ body{
     padding: 10px;
 }
 .posts-section{
-    margin : 0px 15% 0px 15%;
-
-    
+    margin : 0px 15px;
+    width: 100%;
 }
 
 .post{
     /* display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); */
 
-    background-color: rgba(224, 225, 197, 0.906);
+    background-color: rgba(209, 210, 190, 0.909);
     margin-bottom: 2%;
     padding: 1%;
     border: 2px solid darkblue;
@@ -35,7 +34,7 @@ body{
     font-style: italic;
 }
 .profile-section{
-    background-color: rgba(254, 255, 225, 0.906);
+    /* background-color: rgba(254, 255, 225, 0.906); */
     display: flex;
     justify-content: center;
     align-items: center;
